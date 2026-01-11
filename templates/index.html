@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ViralX v2.0 - Twitter Content Generator</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <span class="logo-icon">⚡</span>
+                <h1>Viral<span class="neon">X</span></h1>
+                <span class="version">v2.0</span>
+            </div>
+            <p class="tagline">SaaS-Grade Twitter Content Generator // Cyberpunk Edition</p>
+        </header>
+
+        <main class="main-content">
+            <!-- Sol Panel - Ayarlar -->
+            <aside class="settings-panel">
+                <!-- Tab Navigation -->
+                <div class="tab-nav">
+                    <button class="tab-btn active" data-tab="generate">⚡ Üret</button>
+                    <button class="tab-btn" data-tab="remix">🔄 Remix</button>
+                    <button class="tab-btn tab-reply" data-tab="reply">💬 Reply</button>
+                    <button class="tab-btn" data-tab="settings">⚙️ Ayarlar</button>
+                </div>
+
+                <!-- Generate Tab -->
+                <div class="tab-content active" id="tab-generate">
+                    <div class="panel-section">
+                        <h2 class="section-title"><span class="icon">🎯</span> Konu</h2>
+                        <textarea id="topic" placeholder="Tweet konusunu yaz veya gündemden seç..." rows="3"></textarea>
+                    </div>
+
+                    <!-- Hook Library Section -->
+                    <div class="panel-section">
+                        <h2 class="section-title"><span class="icon">🪝</span> Hook Seç <span class="optional-badge">(Opsiyonel)</span></h2>
+                        <div class="hook-select-wrapper">
+                            <select id="hookSelect" class="hook-select">
+                                <option value="">Hook kullanma</option>
+                                <optgroup label="🔥 Şok/Merak">
+                                    <option value="Bunu öğrendiğimde dünyam değişti:">Bunu öğrendiğimde dünyam değişti:</option>
+                                    <option value="Kimse bundan bahsetmiyor ama...">Kimse bundan bahsetmiyor ama...</option>
+                                    <option value="Sana bir sır vereyim:">Sana bir sır vereyim:</option>
+                                    <option value="%99'u bunu yanlış yapıyor:">%99'u bunu yanlış yapıyor:</option>
+                                    <option value="Bu bilgiyi parayla satamazlar:">Bu bilgiyi parayla satamazlar:</option>
+                                </optgroup>
+                                <optgroup label="💪 Sert/Provokatif">
+                                    <option value="Acı gerçek şu ki:">Acı gerçek şu ki:</option>
+                                    <option value="Millet uyurken sen bunu yap:">Millet uyurken sen bunu yap:</option>
+                                    <option value="Fakir kalmak istiyorsan okuma:">Fakir kalmak istiyorsan okuma:</option>
+                                    <option value="Bak güzel kardeşim:">Bak güzel kardeşim:</option>
+                                    <option value="Herkes şikayet ederken:">Herkes şikayet ederken:</option>
+                                </optgroup>
+                                <optgroup label="📋 Liste/Rehber">
+                                    <option value="İşte [KONU] için 5 altın kural:">İşte [KONU] için 5 altın kural:</option>
+                                    <option value="[KONU] hakkında bilmeniz gereken 3 şey:">[KONU] hakkında bilmeniz gereken 3 şey:</option>
+                                    <option value="Bu araçları bilmiyorsan geride kalıyorsun:">Bu araçları bilmiyorsan geride kalıyorsun:</option>
+                                    <option value="[KONU] rehberi (kaydet):">[KONU] rehberi (kaydet):</option>
+                                    <option value="Thread: [KONU] nasıl yapılır 🧵">Thread: [KONU] nasıl yapılır 🧵</option>
+                                </optgroup>
+                                <optgroup label="📖 Kişisel/Hikaye">
+                                    <option value="3 yıl önce [DURUM] yaşadım:">3 yıl önce [DURUM] yaşadım:</option>
+                                    <option value="En büyük hatam şuydu:">En büyük hatam şuydu:</option>
+                                    <option value="Keşke 20'li yaşlarımda bilseydim:">Keşke 20'li yaşlarımda bilseydim:</option>
+                                    <option value="Bunu yapmasaydım şimdi [SONUÇ] olmazdım:">Bunu yapmasaydım şimdi [SONUÇ] olmazdım:</option>
+                                    <option value="[YIL] yılında [OLAY] yaşadım, öğrendiğim ders:">[YIL] yılında [OLAY] yaşadım, öğrendiğim ders:</option>
+                                </optgroup>
+                                <optgroup label="❓ Soru/Etkileşim">
+                                    <option value="Neden kimse bundan bahsetmiyor?">Neden kimse bundan bahsetmiyor?</option>
+                                    <option value="[KONU] hakkında ne düşünüyorsunuz?">[KONU] hakkında ne düşünüyorsunuz?</option>
+                                    <option value="Sadece ben mi böyle düşünüyorum?">Sadece ben mi böyle düşünüyorum?</option>
+                                    <option value="Bu normal mi sizce?">Bu normal mi sizce?</option>
+                                    <option value="Hangisi daha mantıklı: A mı B mi?">Hangisi daha mantıklı: A mı B mi?</option>
+                                </optgroup>
+                                <optgroup label="👔 Otorite/Uzman">
+                                    <option value="[ÜNLÜ KİŞİ]'nin sır gibi sakladığı yöntem:">[ÜNLÜ KİŞİ]'nin sır gibi sakladığı yöntem:</option>
+                                    <option value="10 yıllık tecrübeyle söylüyorum:">10 yıllık tecrübeyle söylüyorum:</option>
+                                    <option value="[SEKTÖR]'de çalışan biri olarak:">[SEKTÖR]'de çalışan biri olarak:</option>
+                                    <option value="İçeriden bilgi:">İçeriden bilgi:</option>
+                                    <option value="Patronlar bunu bilmenizi istemiyor:">Patronlar bunu bilmenizi istemiyor:</option>
+                                </optgroup>
+                                <optgroup label="⏰ Aciliyet/FOMO">
+                                    <option value="Bunu şimdi yapmazsan çok geç olacak:">Bunu şimdi yapmazsan çok geç olacak:</option>
+                                    <option value="Son 24 saat:">Son 24 saat:</option>
+                                    <option value="Herkes bunu konuşuyor:">Herkes bunu konuşuyor:</option>
+                                    <option value="Bu fırsatı kaçırma:">Bu fırsatı kaçırma:</option>
+                                    <option value="Alarm: [KONU] hakkında önemli gelişme:">Alarm: [KONU] hakkında önemli gelişme:</option>
+                                </optgroup>
+                                <optgroup label="⚖️ Karşılaştırma">
+                                    <option value="2020'de [ESKİ], 2024'te [YENİ]:">2020'de [ESKİ], 2024'te [YENİ]:</option>
+                                    <option value="Zenginler [X] yapar, fakirler [Y] yapar:">Zenginler [X] yapar, fakirler [Y] yapar:</option>
+                                    <option value="Başarılı insanların ortak özelliği:">Başarılı insanların ortak özelliği:</option>
+                                    <option value="[A] vs [B] - Hangisi daha iyi?">[A] vs [B] - Hangisi daha iyi?</option>
+                                    <option value="Herkes [X] derken, gerçek [Y]:">Herkes [X] derken, gerçek [Y]:</option>
+                                </optgroup>
+                                <optgroup label="📚 Eğitim/Değer">
+                                    <option value="Bugün sana [KONU] öğreteceğim:">Bugün sana [KONU] öğreteceğim:</option>
+                                    <option value="5 dakikada [KONU] nasıl yapılır:">5 dakikada [KONU] nasıl yapılır:</option>
+                                    <option value="Ücretsiz [KONU] kursu (thread):">Ücretsiz [KONU] kursu (thread):</option>
+                                    <option value="[KONU] için kullandığım araçlar:">[KONU] için kullandığım araçlar:</option>
+                                    <option value="Yeni başlayanlar için [KONU] rehberi:">Yeni başlayanlar için [KONU] rehberi:</option>
+                                </optgroup>
+                            </select>
+                            <button type="button" class="btn btn-random-hook" id="randomHookBtn" title="Rastgele Hook Seç">
+                                🎲
+                            </button>
+                        </div>
+                        <p class="hook-preview" id="hookPreview"></p>
+                    </div>
+
+                    <div class="panel-section">
+                        <h2 class="section-title"><span class="icon">📝</span> İçerik Türü</h2>
+                        <div class="radio-group">
+                            <label class="radio-card">
+                                <input type="radio" name="contentType" value="single" checked>
+                                <span class="radio-label">Tekil Tweet</span>
+                            </label>
+                            <label class="radio-card">
+                                <input type="radio" name="contentType" value="flood">
+                                <span class="radio-label">Flood</span>
+                            </label>
+                            <label class="radio-card">
+                                <input type="radio" name="contentType" value="reply">
+                                <span class="radio-label">Reply</span>
+                            </label>
+                            <label class="radio-card">
+                                <input type="radio" name="contentType" value="quote">
+                                <span class="radio-label">Quote</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Thread Şablon Seçimi -->
+                    <div class="panel-section" id="templateSection">
+                        <h2 class="section-title"><span class="icon">📝</span> Şablon Seç</h2>
+                        <div class="template-select-wrapper">
+                            <select id="threadTemplate" class="template-select">
+                                <option value="" data-tweets="1" data-description="Şablon kullanmadan serbest üretim">🆓 Serbest (Şablonsuz)</option>
+                                <option value="problem_solution" data-tweets="4" data-description="Problem tanımla → Çözümü açıkla → CTA">🎯 Problem → Çözüm → CTA</option>
+                                <option value="listicle" data-tweets="6" data-description="Hook ile başla → Liste maddeleri → Özet ve CTA">📋 Hook → Liste → Özet</option>
+                                <option value="story" data-tweets="4" data-description="Hikaye anlat → Ders çıkar → Uygulama öner">📖 Hikaye → Ders → Uygula</option>
+                                <option value="shock_fact" data-tweets="4" data-description="Şok edici gerçek → Kanıtla → Ne yapmalı">💥 Şok Gerçek → Kanıt → CTA</option>
+                                <option value="tutorial" data-tweets="7" data-description="Araç listesi + Adımlar + Çalışan Promptlar → Uygula">🧠 Adım Adım Rehber (Araç & Promptlu)</option>
+                                <option value="comparison" data-tweets="4" data-description="Eski yöntem vs Yeni yöntem karşılaştırması">⚔️ Eski vs Yeni Karşılaştırma</option>
+                            </select>
+                            <div class="template-info" id="templateInfo">
+                                <span class="template-tweets-badge" id="templateTweetsBadge">1 tweet</span>
+                                <p class="template-description" id="templateDescription">Şablon kullanmadan serbest üretim</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Target Tweet (Reply/Quote için) -->
+                    <div class="panel-section" id="targetTweetSection" style="display: none;">
+                        <h2 class="section-title"><span class="icon">🎯</span> Hedef Tweet</h2>
+                        <textarea id="targetTweet" placeholder="Cevap vereceğiniz veya alıntılayacağınız tweeti yapıştırın..." rows="2"></textarea>
+                    </div>
+
+                    <div class="panel-section chain-length-section" id="chainLengthSection" style="display: none;">
+                        <h2 class="section-title"><span class="icon">🔗</span> Zincir Uzunluğu</h2>
+                        <div class="slider-container">
+                            <input type="range" id="chainLength" min="1" max="15" value="5">
+                            <span class="slider-value" id="chainLengthValue">5</span>
+                        </div>
+                        <p class="hint">💡 5-7 arası önerilir</p>
+                    </div>
+
+                    <div class="panel-section">
+                        <h2 class="section-title"><span class="icon">🎭</span> Ton</h2>
+                        <select id="tone" class="tone-select">
+                            <optgroup label="🔥 Agresif Tonlar">
+                                <option value="provokatif">😤 Provokatif (Kışkırtıcı)</option>
+                                <option value="sert">💪 Sert (Dobra)</option>
+                                <option value="elestirmen">🎯 Eleştirmen (Acımasız)</option>
+                                <option value="isyankar">✊ İsyankâr (Sisteme karşı)</option>
+                            </optgroup>
+                            <optgroup label="✨ Pozitif Tonlar">
+                                <option value="motivasyonel">🚀 Motivasyonel (İlham verici)</option>
+                                <option value="destekleyici">🤗 Destekleyici (Samimi)</option>
+                                <option value="umutlu">🌟 Umutlu (Pozitif)</option>
+                                <option value="kutlayici">🎉 Kutlayıcı (Başarı odaklı)</option>
+                            </optgroup>
+                            <optgroup label="📚 Bilgi Tonları">
+                                <option value="bilgilendirici" selected>📖 Bilgilendirici (Öğretici)</option>
+                                <option value="analitik">📊 Analitik (Veri odaklı)</option>
+                                <option value="uzman">🎓 Uzman (Otoriter)</option>
+                                <option value="arastirmaci">🔬 Araştırmacı (Detaylı)</option>
+                            </optgroup>
+                            <optgroup label="😂 Eğlence Tonları">
+                                <option value="mizahi">😂 Mizahi (Komik)</option>
+                                <option value="ironik">😏 İronik (Alaycı)</option>
+                                <option value="troll">🤡 Troll (Dalga geçen)</option>
+                                <option value="absurt">🤪 Absürt (Saçma sapan)</option>
+                            </optgroup>
+                            <optgroup label="💭 Duygusal Tonlar">
+                                <option value="nostaljik">🕰️ Nostaljik (Geçmişe özlem)</option>
+                                <option value="melankolik">🌧️ Melankolik (Hüzünlü)</option>
+                                <option value="romantik">💕 Romantik (Aşk dolu)</option>
+                                <option value="felsefi">🤔 Felsefi (Derin düşünce)</option>
+                            </optgroup>
+                            <optgroup label="🎭 Özel Tonlar">
+                                <option value="gizemli">🔮 Gizemli (Merak uyandıran)</option>
+                                <option value="fisiltı">🤫 Fısıltı (Sır veriyor gibi)</option>
+                                <option value="acil">🚨 Acil (FOMO yaratan)</option>
+                                <option value="hikayeci">📖 Hikayeci (Anlatıcı)</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <div class="panel-section">
+                        <h2 class="section-title"><span class="icon">✍️</span> Yazım Stili</h2>
+                        <select id="writingStyle" class="style-select">
+                            <option value="default">-- Varsayılan --</option>
+                            <option value="kisa_vurucu">⚡ Kısa & Vurucu (Tek cümle)</option>
+                            <option value="liste">📋 Liste Formatı (Maddeler)</option>
+                            <option value="hikaye">📖 Hikaye Anlatımı</option>
+                            <option value="soru_cevap">❓ Soru-Cevap Formatı</option>
+                            <option value="oncesi_sonrasi">🔄 Öncesi vs Sonrası</option>
+                            <option value="adim_adim">👣 Adım Adım Rehber</option>
+                            <option value="caps_lock">🔊 CAPS LOCK (Bağıran)</option>
+                            <option value="emoji_agirlikli">😀 Emoji Ağırlıklı</option>
+                            <option value="minimal">🔲 Minimal (Sade, emojisiz)</option>
+                            <option value="thread_baslangic">🧵 Thread Başlangıcı (Merak uyandır)</option>
+                        </select>
+                    </div>
+
+                    <div class="panel-section">
+                        <h2 class="section-title"><span class="icon">👥</span> Hedef Kitle</h2>
+                        <select id="targetAudience" class="audience-select">
+                            <option value="default">-- Genel --</option>
+                            <option value="girisimci">💼 Girişimciler</option>
+                            <option value="developer">👨‍💻 Yazılımcılar</option>
+                            <option value="ogrenci">🎓 Öğrenciler</option>
+                            <option value="z_kusagi">📱 Z Kuşağı (Gen-Z)</option>
+                            <option value="profesyonel">👔 Profesyoneller</option>
+                            <option value="ebeveyn">👨‍👩‍👧 Ebeveynler</option>
+                            <option value="yatirimci">📈 Yatırımcılar</option>
+                            <option value="sanatci">🎨 Sanatçılar/Kreatifler</option>
+                            <option value="sporcu">⚽ Sporseverler</option>
+                        </select>
+                    </div>
+
+                    <div class="panel-section">
+                        <h2 class="section-title"><span class="icon">🪝</span> Viral Kanca</h2>
+                        <select id="hook">
+                            <option value="">Kanca seçin (opsiyonel)</option>
+                            <option value="Çoğu kişi bilmiyor ama...">Çoğu kişi bilmiyor ama...</option>
+                            <option value="Kimse konuşmuyor ama...">Kimse konuşmuyor ama...</option>
+                            <option value="Unpopular opinion:">Unpopular opinion:</option>
+                            <option value="Yıllardır kandırıldınız...">Yıllardır kandırıldınız...</option>
+                            <option value="Thread: ">Thread:</option>
+                            <option value="Bunu anlayana kadar 5 yılımı harcadım:">Bunu anlayana kadar 5 yılımı harcadım:</option>
+                            <option value="Türkiye'de kimse bunu yapmıyor:">Türkiye'de kimse bunu yapmıyor:</option>
+                            <option value="Bugün öğrendim ki...">Bugün öğrendim ki...</option>
+                            <option value="Bir sır vereyim:">Bir sır vereyim:</option>
+                            <option value="Hot take:">Hot take:</option>
+                        </select>
+                    </div>
+
+                    <div class="panel-section toggles">
+                        <div class="toggle-row premium-toggle-row">
+                            <label class="toggle">
+                                <input type="checkbox" id="xPremiumMode">
+                                <span class="toggle-slider toggle-slider-premium"></span>
+                            </label>
+                            <span class="toggle-label">✨ X Premium (Uzun Tweet - 4000 karakter)</span>
+                        </div>
+                        <div class="toggle-row">
+                            <label class="toggle">
+                                <input type="checkbox" id="includeVisual">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <span class="toggle-label">🎨 Görsel Önerisi</span>
+                        </div>
+                        <div class="toggle-row">
+                            <label class="toggle">
+                                <input type="checkbox" id="includeEngagement">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <span class="toggle-label">💬 Engagement Taktikleri</span>
+                        </div>
+                        <div class="toggle-row">
+                            <label class="toggle">
+                                <input type="checkbox" id="generateVariations">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <span class="toggle-label">🔀 A/B Varyasyonları (3 Versiyon)</span>
+                        </div>
+                    </div>
+
+                    <!-- Görsel Stüdyosu -->
+                    <div class="panel-section" id="visualStudioSection" style="display: none;">
+                        <h2 class="section-title"><span class="icon">🖼️</span> Görsel Stüdyosu</h2>
+                        <select id="visualRatio">
+                            <option value="1:1">Kare (1:1)</option>
+                            <option value="16:9">Geniş (16:9)</option>
+                            <option value="9:16">Dikey (9:16)</option>
+                        </select>
+                    </div>
+
+                    <div class="generate-buttons-row">
+                        <button class="btn btn-primary btn-generate" id="generateBtn">
+                            <span class="btn-icon">⚡</span> Tweet Üret
+                        </button>
+                        <button class="btn btn-secondary btn-variant" id="generateVariantsBtn" title="5 Farklı Stil Varyantı Üret">
+                            <span class="btn-icon">🔀</span> 5 Varyant
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Remix Tab -->
+                <div class="tab-content" id="tab-remix">
+                    <div class="panel-section remix-header-section">
+                        <h2 class="section-title"><span class="icon">🔄</span> Viral Remix</h2>
+                        <p class="remix-subtitle">Esinlen & Uyarla</p>
+                        <p class="hint">Viral bir tweeti kendi persona'na göre yeniden yaz. Orijinal fikri koru, ama kendi tarzınla söyle.</p>
+                    </div>
+
+                    <div class="panel-section">
+                        <h2 class="section-title"><span class="icon">📥</span> Kaynak Tweet</h2>
+                        <textarea id="sourceTweet" placeholder="Viral tweeti buraya yapıştırın...
+
+Örnek: 'Herkes ChatGPT öğrenirken, işin kurdu olanlar...'" rows="5"></textarea>
+                    </div>
+
+                    <div class="panel-section toggles">
+                        <div class="toggle-row">
+                            <label class="toggle">
+                                <input type="checkbox" id="remixVariations" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <span class="toggle-label">🔀 3 Farklı Versiyon Üret</span>
+                        </div>
+                    </div>
+
+                    <!-- Son Remixler -->
+                    <div class="panel-section" id="remixHistorySection">
+                        <div class="remix-history-header">
+                            <h2 class="section-title"><span class="icon">📜</span> Son Remixler</h2>
+                            <button class="btn btn-ghost btn-small" id="clearRemixHistory" title="Geçmişi Temizle">🗑️</button>
+                        </div>
+                        <div class="remix-history-list" id="remixHistoryList">
+                            <p class="hint">Henüz remix yapılmadı.</p>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary btn-generate" id="remixBtn">
+                        <span class="btn-icon">✨</span> Benim Tarzımda Yaz
+                    </button>
+                </div>
+
+                <!-- Reply Tab -->
+                <div class="tab-content" id="tab-reply">
+                    <div class="panel-section reply-header-section">
+                        <h2 class="section-title"><span class="icon">💬</span> Tweet'e Cevap Yaz</h2>
+                        <p class="reply-subtitle">Akıllı Reply Üretici</p>
+                        <p class="hint">Herhangi bir tweet'e viral cevap üret. Ton seç, AI gerisini halleder.</p>
+                    </div>
+
+                    <div class="panel-section">
+                        <h2 class="section-title"><span class="icon">📥</span> Hedef Tweet</h2>
+                        <textarea id="replyTargetTweet" placeholder="Cevap vereceğin tweet'i buraya yapıştır...
+
+Örnek: 'Yapay zeka 5 yıl içinde tüm işleri ele geçirecek.'" rows="4"></textarea>
+                    </div>
+
+                    <div class="panel-section">
+                        <h2 class="section-title"><span class="icon">🎭</span> Cevap Tonu</h2>
+                        <div class="reply-tone-grid">
+                            <label class="reply-tone-card">
+                                <input type="radio" name="replyTone" value="supportive" checked>
+                                <span class="reply-tone-icon">🤝</span>
+                                <span class="reply-tone-label">Destekleyici</span>
+                                <span class="reply-tone-desc">Katılıyorum, ekleme yapıyorum</span>
+                            </label>
+                            <label class="reply-tone-card">
+                                <input type="radio" name="replyTone" value="questioning">
+                                <span class="reply-tone-icon">🤔</span>
+                                <span class="reply-tone-label">Sorgulayıcı</span>
+                                <span class="reply-tone-desc">Soru soruyorum, merak ediyorum</span>
+                            </label>
+                            <label class="reply-tone-card">
+                                <input type="radio" name="replyTone" value="opposing">
+                                <span class="reply-tone-icon">😤</span>
+                                <span class="reply-tone-label">Karşıt</span>
+                                <span class="reply-tone-desc">Katılmıyorum, eleştiriyorum</span>
+                            </label>
+                            <label class="reply-tone-card">
+                                <input type="radio" name="replyTone" value="humorous">
+                                <span class="reply-tone-icon">😂</span>
+                                <span class="reply-tone-label">Mizahi</span>
+                                <span class="reply-tone-desc">Espri, şaka yapıyorum</span>
+                            </label>
+                            <label class="reply-tone-card">
+                                <input type="radio" name="replyTone" value="informative">
+                                <span class="reply-tone-icon">🧠</span>
+                                <span class="reply-tone-label">Bilgi Ekle</span>
+                                <span class="reply-tone-desc">Değerli bilgi/kaynak ekliyorum</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="panel-section toggles">
+                        <div class="toggle-row">
+                            <label class="toggle">
+                                <input type="checkbox" id="replyMultiple" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <span class="toggle-label">🔀 3 Farklı Reply Öner</span>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary btn-generate btn-reply-generate" id="generateReplyBtn">
+                        <span class="btn-icon">💬</span> Reply Üret
+                    </button>
+
+                    <!-- Reply Sonuçları -->
+                    <div class="panel-section reply-results-section" id="replyResultsSection" style="display: none;">
+                        <h2 class="section-title"><span class="icon">✨</span> Önerilen Reply'lar</h2>
+                        <div class="reply-results-list" id="replyResultsList">
+                            <!-- Reply kartları buraya gelecek -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Tab -->
+                <div class="tab-content" id="tab-settings">
+                    <div class="panel-section persona-section">
+                        <h2 class="section-title"><span class="icon">🤖</span> Persona</h2>
+
+                        <!-- Persona Name + Dropdown Row -->
+                        <div class="persona-header-row">
+                            <div class="persona-name-wrapper">
+                                <input type="text" id="personaName" class="persona-name-input" placeholder="Persona Adı (Örn: Tech Guru)" maxlength="30">
+                            </div>
+                            <div class="persona-dropdown-wrapper">
+                                <button class="btn btn-secondary persona-dropdown-btn" id="personaDropdownBtn">
+                                    <span class="btn-icon">📋</span> Personalarım
+                                </button>
+                                <div class="persona-dropdown-menu" id="personaDropdownMenu">
+                                    <div class="persona-dropdown-list" id="personaDropdownList">
+                                        <p class="hint">Henüz kayıtlı persona yok.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Persona Content -->
+                        <textarea id="persona" placeholder="Karakter tanımınızı yazın. Örn: 'Sen deneyimli bir yazılımcısın, 10 yıldır sektörde çalışıyorsun...'" rows="6"></textarea>
+
+                        <!-- Persona Action Buttons -->
+                        <div class="persona-buttons">
+                            <button class="btn btn-primary-green" id="savePersona">💾 Persona Kaydet</button>
+                            <button class="btn btn-secondary" id="newPersonaBtn">➕ Yeni Persona</button>
+                            <button class="btn btn-ghost" id="clearPersona">🗑️ Temizle</button>
+                        </div>
+                        <p class="persona-limit-hint" id="personaLimitHint">Maksimum 10 persona kaydedebilirsiniz.</p>
+                    </div>
+
+                    <div class="panel-section">
+                        <h2 class="section-title"><span class="icon">📁</span> Taslaklarım</h2>
+                        <button class="btn btn-secondary" id="openDraftsBtn" style="width: 100%;">
+                            <span class="btn-icon">📂</span> Taslakları Görüntüle
+                        </button>
+                    </div>
+
+                    <div class="panel-section">
+                        <h2 class="section-title"><span class="icon">⚡</span> Toplu Üretim</h2>
+                        <button class="btn btn-secondary btn-bulk-upload" id="openBulkUploadBtn" style="width: 100%;">
+                            <span class="btn-icon">⚡</span> Toplu Üret
+                        </button>
+                        <p class="hint" style="margin-top: 8px;">CSV dosyasından birden fazla tweet üretin</p>
+                    </div>
+
+                    <div class="panel-section">
+                        <h2 class="section-title"><span class="icon">📊</span> Performans</h2>
+                        <button class="btn btn-secondary btn-analytics" id="openAnalyticsBtn" style="width: 100%;">
+                            <span class="btn-icon">📊</span> Performans Geçmişi
+                        </button>
+                        <p class="hint" style="margin-top: 8px;">Tweet üretim istatistiklerinizi görün</p>
+                    </div>
+
+                    <!-- Theme Toggle -->
+                    <div class="panel-section">
+                        <h2 class="section-title"><span class="icon">🌓</span> Tema</h2>
+                        <div class="theme-toggle-container">
+                            <div class="theme-toggle" id="themeToggle">
+                                <span class="theme-icon dark">🌙</span>
+                                <div class="theme-slider"></div>
+                                <span class="theme-icon light">☀️</span>
+                            </div>
+                            <span class="theme-label" id="themeLabel">Dark Mode</span>
+                        </div>
+                        <p class="hint" style="margin-top: 8px;">Cyberpunk veya Light tema arasında geçiş yap</p>
+                    </div>
+
+                    <!-- Content Filter -->
+                    <div class="panel-section">
+                        <h2 class="section-title"><span class="icon">🛡️</span> İçerik Filtresi</h2>
+                        <div class="toggle-row">
+                            <label class="toggle">
+                                <input type="checkbox" id="contentFilterEnabled" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <span class="toggle-label">Riskli içerik uyarısı göster</span>
+                        </div>
+                        <p class="hint" style="margin-top: 8px;">Hakaret, nefret söylemi ve manipülatif içerikleri tespit et</p>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Sağ Panel -->
+            <section class="output-panel">
+                <!-- Gündem Radarı -->
+                <div class="news-section">
+                    <div class="news-header">
+                        <h2 class="section-title"><span class="icon">📡</span> Gündem Radarı</h2>
+                        <div class="news-controls">
+                            <select id="newsCategory" class="news-category-select">
+                                <option value="all">🔥 Tümü</option>
+                                <option value="ai">🤖 AI / Yapay Zeka</option>
+                                <option value="tech">💻 Teknoloji</option>
+                                <option value="turkey">🇹🇷 Türkiye Gündem</option>
+                                <option value="crypto">🪙 Kripto / Blockchain</option>
+                                <option value="finance">📈 Finans / Ekonomi</option>
+                                <option value="sports">⚽ Spor</option>
+                                <option value="gaming">🎮 Gaming / Oyun</option>
+                                <option value="entertainment">🎬 Eğlence</option>
+                                <option value="health">🧬 Sağlık / Biohacking</option>
+                                <option value="startup">🚀 Startup</option>
+                                <option value="social">📱 Sosyal Medya</option>
+                                <option value="world">🌍 Dünya Haberleri</option>
+                                <option value="science">🔬 Bilim</option>
+                                <option value="automotive">🚗 Otomotiv / EV</option>
+                            </select>
+                            <button class="btn btn-secondary" id="fetchNewsBtn">
+                                <span class="btn-icon">🔄</span> Gündemi Tara
+                            </button>
+                        </div>
+                    </div>
+                    <div class="news-grid" id="newsGrid">
+                        <p class="placeholder-text">Gündem haberlerini görmek için "Gündemi Tara" butonuna tıklayın.</p>
+                    </div>
+                </div>
+
+                <!-- Tweet Çıktıları -->
+                <div class="output-section">
+                    <div class="output-header">
+                        <h2 class="section-title"><span class="icon">🐦</span> Üretilen Tweetler</h2>
+                        <div class="output-actions" id="outputActions" style="display: none;">
+                            <button class="btn btn-secondary" id="copyAllBtn">
+                                <span class="btn-icon">📋</span> Tümünü Kopyala
+                            </button>
+                            <button class="btn btn-secondary" id="regenerateBtn">
+                                <span class="btn-icon">🔄</span> Yeniden Üret
+                            </button>
+                        </div>
+                    </div>
+                    <div class="tweets-container" id="tweetsContainer">
+                        <div class="placeholder-card">
+                            <div class="placeholder-icon">🚀</div>
+                            <p>Konunuzu girin ve "Tweet Üret" butonuna tıklayın.</p>
+                            <p class="placeholder-hint">AI destekli viral içerikler üretin!</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Drafts Modal -->
+        <div class="modal" id="draftsModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>📁 Taslaklarım</h2>
+                    <button class="modal-close" id="closeDraftsModal">&times;</button>
+                </div>
+                <div class="modal-body" id="draftsContainer">
+                    <p class="placeholder-text">Henüz kayıtlı taslak yok.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visual Editor Modal -->
+        <div class="modal" id="visualModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>🎨 Görsel Stüdyosu</h2>
+                    <button class="modal-close" id="closeVisualModal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-section">
+                        <h3>Görsel Promptu</h3>
+                        <textarea id="visualPromptEdit" rows="4" placeholder="Görsel promptunu düzenleyin..."></textarea>
+                    </div>
+                    <div class="panel-section">
+                        <h3>Boyut</h3>
+                        <select id="visualRatioModal">
+                            <option value="1:1">Kare (1:1)</option>
+                            <option value="16:9">Geniş (16:9)</option>
+                            <option value="9:16">Dikey (9:16)</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" id="generateImageBtn" style="width: 100%;">
+                        <span class="btn-icon">🎨</span> Görseli Üret (Imagen 3)
+                    </button>
+                    <div id="generatedImageContainer" style="margin-top: 20px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bulk Upload Modal -->
+        <div class="modal" id="bulkUploadModal">
+            <div class="modal-content modal-bulk-wide">
+                <div class="modal-header">
+                    <h2>⚡ Toplu Tweet Üretici</h2>
+                    <button class="modal-close" id="closeBulkUploadModal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <!-- File Upload Area (Initial State) -->
+                    <div class="bulk-upload-zone" id="bulkUploadZone">
+                        <div class="upload-zone-content">
+                            <span class="upload-icon">📁</span>
+                            <p class="upload-text">Dosyayı sürükleyip bırakın</p>
+                            <p class="upload-hint">veya</p>
+                            <label class="btn btn-secondary upload-btn">
+                                <span class="btn-icon">📄</span> Dosya Seç (.csv / .txt)
+                                <input type="file" id="bulkFileInput" accept=".csv,.txt" hidden>
+                            </label>
+                            <div class="upload-examples">
+                                <button class="btn btn-ghost btn-small" id="downloadSimpleCSV">
+                                    <span class="btn-icon">⬇️</span> Basit Örnek
+                                </button>
+                                <button class="btn btn-ghost btn-small" id="downloadAdvancedCSV">
+                                    <span class="btn-icon">⬇️</span> Gelişmiş CSV
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Full Preview Section (After Upload) -->
+                    <div class="bulk-editor-section" id="bulkEditorSection" style="display: none;">
+
+                        <!-- Summary Bar -->
+                        <div class="bulk-summary-bar">
+                            <div class="summary-stats">
+                                <span class="stat-item" id="bulkTopicCount">📌 0 konu</span>
+                                <span class="stat-item" id="bulkTimeEstimate">⏱️ ~0 sn</span>
+                                <span class="stat-item" id="bulkTypeStats">📝 0 Tweet, 0 Flood</span>
+                            </div>
+                            <div class="summary-actions">
+                                <button class="btn btn-ghost btn-small" id="addManualTopic">
+                                    <span class="btn-icon">➕</span> Konu Ekle
+                                </button>
+                                <button class="btn btn-ghost btn-small" id="clearAllTopics">
+                                    <span class="btn-icon">🗑️</span> Tümünü Temizle
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Bulk Apply Settings -->
+                        <div class="bulk-apply-section">
+                            <div class="bulk-apply-header">
+                                <span class="bulk-apply-title">⚡ Tüm Konulara Aynı Ayarları Uygula</span>
+                                <button class="btn btn-apply-all" id="applyBulkSettings">
+                                    <span class="btn-icon">🔄</span> Hepsine Uygula
+                                </button>
+                            </div>
+                            <div class="bulk-apply-grid">
+                                <div class="bulk-apply-item">
+                                    <label>🎭 Ton</label>
+                                    <select id="bulkApplyTone" class="bulk-select">
+                                        <option value="">-- Değiştirme --</option>
+                                        <optgroup label="🔥 Agresif">
+                                            <option value="provokatif">Provokatif</option>
+                                            <option value="sert">Sert</option>
+                                            <option value="elestirmen">Eleştirmen</option>
+                                            <option value="isyankar">İsyankâr</option>
+                                        </optgroup>
+                                        <optgroup label="✨ Pozitif">
+                                            <option value="motivasyonel">Motivasyonel</option>
+                                            <option value="destekleyici">Destekleyici</option>
+                                            <option value="umutlu">Umutlu</option>
+                                            <option value="kutlayici">Kutlayıcı</option>
+                                        </optgroup>
+                                        <optgroup label="📚 Bilgi">
+                                            <option value="bilgilendirici">Bilgilendirici</option>
+                                            <option value="analitik">Analitik</option>
+                                            <option value="uzman">Uzman</option>
+                                            <option value="arastirmaci">Araştırmacı</option>
+                                        </optgroup>
+                                        <optgroup label="😂 Eğlence">
+                                            <option value="mizahi">Mizahi</option>
+                                            <option value="ironik">İronik</option>
+                                            <option value="troll">Troll</option>
+                                            <option value="absurt">Absürt</option>
+                                        </optgroup>
+                                        <optgroup label="💭 Duygusal">
+                                            <option value="nostaljik">Nostaljik</option>
+                                            <option value="melankolik">Melankolik</option>
+                                            <option value="romantik">Romantik</option>
+                                            <option value="felsefi">Felsefi</option>
+                                        </optgroup>
+                                        <optgroup label="🎭 Özel">
+                                            <option value="gizemli">Gizemli</option>
+                                            <option value="fisiltı">Fısıltı</option>
+                                            <option value="acil">Acil</option>
+                                            <option value="hikayeci">Hikayeci</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                                <div class="bulk-apply-item">
+                                    <label>✍️ Stil</label>
+                                    <select id="bulkApplyStyle" class="bulk-select">
+                                        <option value="">-- Değiştirme --</option>
+                                        <option value="default">Varsayılan</option>
+                                        <option value="kisa_vurucu">Kısa & Vurucu</option>
+                                        <option value="liste">Liste Formatı</option>
+                                        <option value="hikaye">Hikaye Anlatımı</option>
+                                        <option value="soru_cevap">Soru-Cevap</option>
+                                        <option value="oncesi_sonrasi">Öncesi vs Sonrası</option>
+                                        <option value="adim_adim">Adım Adım</option>
+                                        <option value="caps_lock">CAPS LOCK</option>
+                                        <option value="emoji_agirlikli">Emoji Ağırlıklı</option>
+                                        <option value="minimal">Minimal</option>
+                                        <option value="thread_baslangic">Thread Başlangıcı</option>
+                                    </select>
+                                </div>
+                                <div class="bulk-apply-item">
+                                    <label>👥 Kitle</label>
+                                    <select id="bulkApplyAudience" class="bulk-select">
+                                        <option value="">-- Değiştirme --</option>
+                                        <option value="default">Genel</option>
+                                        <option value="girisimci">Girişimciler</option>
+                                        <option value="developer">Yazılımcılar</option>
+                                        <option value="ogrenci">Öğrenciler</option>
+                                        <option value="z_kusagi">Z Kuşağı</option>
+                                        <option value="profesyonel">Profesyoneller</option>
+                                        <option value="ebeveyn">Ebeveynler</option>
+                                        <option value="yatirimci">Yatırımcılar</option>
+                                        <option value="sanatci">Sanatçılar</option>
+                                        <option value="sporcu">Sporseverler</option>
+                                    </select>
+                                </div>
+                                <div class="bulk-apply-item">
+                                    <label>📝 Tür</label>
+                                    <select id="bulkApplyType" class="bulk-select">
+                                        <option value="">-- Değiştirme --</option>
+                                        <option value="single">Tek Tweet</option>
+                                        <option value="flood">Flood (5 tweet)</option>
+                                    </select>
+                                </div>
+                                <div class="bulk-apply-item bulk-apply-checkbox">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="bulkApplyPremium">
+                                        <span>✨ Premium</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Topic Cards List -->
+                        <div class="bulk-topics-list" id="bulkTopicsList">
+                            <!-- Cards will be dynamically added here -->
+                        </div>
+
+                        <!-- Progress Section -->
+                        <div class="bulk-progress-section" id="bulkProgressSection" style="display: none;">
+                            <div class="progress-header">
+                                <span class="progress-title">⚡ Üretiliyor...</span>
+                                <span class="progress-status" id="progressStatus">0 / 0</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" id="bulkProgressBar" style="width: 0%"></div>
+                            </div>
+                            <p class="progress-hint" id="progressHint">Lütfen bekleyin...</p>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="bulk-actions">
+                            <button class="btn btn-secondary" id="bulkBackBtn">
+                                <span class="btn-icon">◀️</span> Geri
+                            </button>
+                            <button class="btn btn-primary btn-generate-bulk" id="generateBulkBtn">
+                                <span class="btn-icon">🚀</span> Tümünü Üret
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Dashboard Modal -->
+        <div class="modal" id="analyticsModal">
+            <div class="modal-content modal-analytics">
+                <div class="modal-header">
+                    <h2>📊 Performans Geçmişi</h2>
+                    <button class="modal-close" id="closeAnalyticsModal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <!-- Summary Cards -->
+                    <div class="analytics-summary">
+                        <div class="summary-card">
+                            <span class="summary-icon">📝</span>
+                            <div class="summary-info">
+                                <span class="summary-value" id="totalTweetsCount">0</span>
+                                <span class="summary-label">Toplam Tweet</span>
+                            </div>
+                        </div>
+                        <div class="summary-card">
+                            <span class="summary-icon">🔥</span>
+                            <div class="summary-info">
+                                <span class="summary-value" id="avgViralityScore">0</span>
+                                <span class="summary-label">Ort. Virallik</span>
+                            </div>
+                        </div>
+                        <div class="summary-card">
+                            <span class="summary-icon">🏆</span>
+                            <div class="summary-info">
+                                <span class="summary-value" id="bestTemplate">-</span>
+                                <span class="summary-label">En İyi Şablon</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Template Performance Chart -->
+                    <div class="analytics-chart-section">
+                        <h3 class="chart-title">📈 Şablon Performansı</h3>
+                        <div class="chart-container" id="templateChart">
+                            <div class="chart-empty">Henüz veri yok</div>
+                        </div>
+                    </div>
+
+                    <!-- History List -->
+                    <div class="analytics-history-section">
+                        <div class="history-header">
+                            <h3 class="history-title">📜 Geçmiş</h3>
+                            <span class="history-count" id="historyCount">0 kayıt</span>
+                        </div>
+                        <div class="history-list" id="historyList">
+                            <div class="history-empty">Henüz tweet üretilmedi</div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="analytics-actions">
+                        <button class="btn btn-secondary" id="exportHistoryCSV">
+                            <span class="btn-icon">📥</span> CSV İndir
+                        </button>
+                        <button class="btn btn-danger" id="clearHistoryBtn">
+                            <span class="btn-icon">🗑️</span> Temizle
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="loading-content">
+                <div class="loading-spinner-container">
+                    <div class="loading-spinner"></div>
+                    <div class="loading-spinner-glow"></div>
+                </div>
+                <p class="loading-text" id="loadingText">Yapay zeka düşünüyor...</p>
+                <p class="loading-subtext" id="loadingSubtext">Gemini AI analiz ediyor</p>
+
+                <!-- Progress Bar (Flood için) -->
+                <div class="loading-progress-container" id="loadingProgressContainer" style="display: none;">
+                    <div class="loading-progress-bar">
+                        <div class="loading-progress-fill" id="loadingProgressFill"></div>
+                    </div>
+                    <span class="loading-progress-text" id="loadingProgressText">Tweet 1/5 üretiliyor...</span>
+                </div>
+
+                <!-- İptal Butonu -->
+                <button class="btn btn-cancel-loading" id="cancelLoadingBtn">
+                    <span class="btn-icon">❌</span> İptal Et
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- html2canvas for screenshot export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="/static/script.js"></script>
+</body>
+</html>
