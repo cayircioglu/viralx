@@ -5276,3 +5276,561 @@ input[type="range"]::-webkit-slider-thumb {
 :root.light-mode .tweet-card.loading::after {
     background: rgba(255, 255, 255, 0.5);
 }
+
+/* ==========================================
+   TREND-JACKING SYSTEM STYLES
+   ========================================== */
+
+.trend-jacking-section {
+    margin-top: 25px;
+    padding: 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+}
+
+.trend-jacking-section .section-title {
+    margin-bottom: 5px;
+}
+
+.trend-jacking-section .section-desc {
+    color: var(--text-secondary);
+    font-size: 13px;
+    margin-bottom: 15px;
+}
+
+.trend-jacking-container {
+    margin-top: 15px;
+}
+
+.trends-list {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 15px;
+    background: var(--bg-secondary);
+}
+
+.trend-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.trend-item:last-child {
+    border-bottom: none;
+}
+
+.trend-item:hover {
+    background: rgba(0, 255, 65, 0.1);
+}
+
+:root.light-mode .trend-item:hover {
+    background: rgba(99, 102, 241, 0.1);
+}
+
+.trend-item.selected {
+    background: rgba(0, 255, 65, 0.2);
+    border-left: 3px solid var(--accent-color);
+}
+
+:root.light-mode .trend-item.selected {
+    background: rgba(99, 102, 241, 0.15);
+}
+
+.trend-rank {
+    font-weight: bold;
+    color: var(--accent-color);
+    width: 35px;
+    font-size: 14px;
+}
+
+.trend-name {
+    flex: 1;
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 14px;
+}
+
+.trend-category {
+    font-size: 11px;
+    background: var(--bg-primary);
+    padding: 3px 8px;
+    border-radius: 10px;
+    margin-right: 10px;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+}
+
+.trend-volume {
+    font-size: 12px;
+    color: var(--accent-color);
+    font-weight: 600;
+}
+
+.trends-loading, .no-trends, .trends-error {
+    padding: 30px;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+.trends-loading {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.trend-selected {
+    background: var(--bg-card);
+    border: 1px solid var(--accent-color);
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 15px;
+}
+
+.selected-trend-name {
+    background: var(--bg-secondary);
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border-left: 3px solid var(--accent-color);
+}
+
+.selected-trend-name strong {
+    color: var(--accent-color);
+}
+
+.trend-meta {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-left: 10px;
+}
+
+.trend-label {
+    display: block;
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 5px;
+    margin-top: 10px;
+}
+
+#trend-niche, #trend-angle {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 14px;
+    transition: border-color 0.2s;
+}
+
+#trend-niche:focus, #trend-angle:focus {
+    border-color: var(--accent-color);
+    outline: none;
+}
+
+#generate-trend-tweet {
+    width: 100%;
+    padding: 14px;
+    margin-top: 15px;
+    font-size: 15px;
+}
+
+#generate-trend-tweet:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Trend refresh button */
+.trends-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-primary);
+}
+
+.trends-header h4 {
+    margin: 0;
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.btn-refresh-trends {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.2s;
+}
+
+.btn-refresh-trends:hover {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+}
+
+/* Trend source badges */
+.trend-source {
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 5px;
+}
+
+.trend-source.google {
+    background: rgba(66, 133, 244, 0.2);
+    color: #4285f4;
+}
+
+.trend-source.twitter {
+    background: rgba(29, 161, 242, 0.2);
+    color: #1da1f2;
+}
+
+.trend-source.eksi {
+    background: rgba(129, 193, 75, 0.2);
+    color: #81c14b;
+}
+
+/* Trend-Jacking Section Header */
+.trend-jacking-section .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.btn-refresh {
+    background: transparent;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    transition: transform 0.3s;
+    padding: 5px;
+}
+
+.btn-refresh:hover {
+    transform: rotate(180deg);
+}
+
+/* Trends Container */
+.trends-container {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+
+.trends-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 15px;
+    background: rgba(0, 255, 65, 0.1);
+    border-bottom: 1px solid var(--border-color);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent-color);
+}
+
+:root.light-mode .trends-header {
+    background: rgba(99, 102, 241, 0.1);
+}
+
+.trends-update {
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-weight: normal;
+}
+
+.trends-empty, .trends-error {
+    padding: 30px;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+/* Trend Item Info */
+.trend-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.trend-meta {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* Trend Editor */
+.trend-editor {
+    background: var(--bg-card);
+    border: 1px solid var(--accent-color);
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 15px;
+}
+
+.selected-trend-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0, 255, 65, 0.1);
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border-left: 3px solid var(--accent-color);
+}
+
+:root.light-mode .selected-trend-badge {
+    background: rgba(99, 102, 241, 0.1);
+}
+
+.badge-icon {
+    font-size: 18px;
+}
+
+.badge-text {
+    flex: 1;
+    font-weight: bold;
+    color: var(--accent-color);
+}
+
+.badge-category {
+    font-size: 11px;
+    background: var(--bg-secondary);
+    padding: 3px 10px;
+    border-radius: 4px;
+    color: var(--text-secondary);
+}
+
+.badge-close {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 18px;
+    padding: 0 5px;
+    transition: color 0.2s;
+}
+
+.badge-close:hover {
+    color: var(--danger);
+}
+
+/* Trend Form */
+.trend-form .form-group {
+    margin-bottom: 15px;
+}
+
+.trend-form label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.trend-form input,
+.trend-form select {
+    width: 100%;
+    padding: 12px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 14px;
+    transition: border-color 0.2s;
+}
+
+.trend-form input:focus,
+.trend-form select:focus {
+    border-color: var(--accent-color);
+    outline: none;
+}
+
+.btn-trend-generate {
+    width: 100%;
+    padding: 14px;
+    margin-top: 10px;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* Trend Result */
+.trend-result {
+    margin-top: 15px;
+}
+
+.trend-tweet-card {
+    background: var(--bg-card);
+    border: 1px solid var(--accent-color);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 20px var(--shadow-color);
+}
+
+.trend-tweet-card .tweet-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.tweet-trend-badge {
+    background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.trend-tweet-card .tweet-char-count {
+    font-size: 12px;
+    color: var(--text-secondary);
+    padding: 4px 10px;
+    background: var(--bg-secondary);
+    border-radius: 4px;
+}
+
+.trend-tweet-card .tweet-char-count.over {
+    color: var(--danger);
+    background: rgba(244, 33, 46, 0.1);
+}
+
+.trend-tweet-card .tweet-char-count.warning {
+    color: var(--warning);
+    background: rgba(255, 212, 0, 0.1);
+}
+
+.trend-tweet-card .tweet-content {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--text-primary);
+    padding: 20px;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border-left: 3px solid var(--accent-color);
+}
+
+.trend-tweet-card .tweet-scores {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.trend-tweet-card .score-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 25px;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    min-width: 100px;
+}
+
+.trend-tweet-card .score-item.high {
+    border-bottom: 3px solid var(--success);
+}
+
+.trend-tweet-card .score-item.medium {
+    border-bottom: 3px solid var(--warning);
+}
+
+.trend-tweet-card .score-item.low {
+    border-bottom: 3px solid var(--danger);
+}
+
+.trend-tweet-card .score-label {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-bottom: 5px;
+}
+
+.trend-tweet-card .score-value {
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--text-primary);
+}
+
+.tweet-criticism {
+    background: rgba(0, 255, 65, 0.05);
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-size: 13px;
+    border-left: 3px solid var(--accent-color);
+}
+
+:root.light-mode .tweet-criticism {
+    background: rgba(99, 102, 241, 0.05);
+}
+
+.criticism-label {
+    color: var(--accent-color);
+    font-weight: 600;
+    margin-right: 8px;
+}
+
+.criticism-text {
+    color: var(--text-secondary);
+}
+
+.trend-tweet-card .tweet-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-action {
+    flex: 1;
+    padding: 12px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.btn-action:hover {
+    border-color: var(--accent-color);
+    background: rgba(0, 255, 65, 0.1);
+}
+
+:root.light-mode .btn-action:hover {
+    background: rgba(99, 102, 241, 0.1);
+}
+
+/* Spinner Small */
+.spinner-small {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    border-top: 2px solid currentColor;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    display: inline-block;
+    margin-right: 8px;
+}
+
+/* Trend source in item */
+.trend-item .trend-source {
+    font-size: 16px;
+    opacity: 0.7;
+}

@@ -549,6 +549,65 @@
                     </div>
                 </div>
 
+                <!-- Trend-Jacking Sistemi -->
+                <div class="panel-section trend-jacking-section" id="trend-jacking-section">
+                    <div class="section-header">
+                        <h2 class="section-title"><span class="icon">🔥</span> TREND-JACKING</h2>
+                        <button onclick="fetchTrends()" class="btn-refresh" title="Trendleri Yenile">🔄</button>
+                    </div>
+                    <p class="section-desc">Gündemdeki konuları kendi nişinle birleştir, viral ol!</p>
+
+                    <div class="trend-jacking-container">
+                        <!-- Trend Listesi Başlığı -->
+                        <div class="trends-container">
+                            <div class="trends-header">
+                                <span>📍 Türkiye Gündemi</span>
+                                <span class="trends-update" id="trends-update-time">--:--</span>
+                            </div>
+                            <div class="trends-list" id="trends-list">
+                                <div class="trends-loading">
+                                    <div class="spinner"></div>
+                                    Trendler yükleniyor...
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Trend Seçilince - Editor -->
+                        <div class="trend-editor" id="trend-editor" style="display:none;">
+                            <div class="selected-trend-badge" id="selected-trend-badge"></div>
+
+                            <div class="trend-form">
+                                <div class="form-group">
+                                    <label>📌 Senin Nişin:</label>
+                                    <input type="text" id="trend-niche" placeholder="girişimcilik, AI, kripto, kişisel gelişim..." value="girişimcilik">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>🎯 Tweet Açısı:</label>
+                                    <select id="trend-angle">
+                                        <option value="hot_take">🔥 Hot Take - Cesur yorum</option>
+                                        <option value="analiz">📊 Analiz - Derinlemesine bakış</option>
+                                        <option value="tahmin">🔮 Tahmin - Ne olacak?</option>
+                                        <option value="ders">📚 Ders - Bundan ne öğrenilir?</option>
+                                        <option value="karsilastirma">⚖️ Karşılaştırma - X vs Y</option>
+                                        <option value="kisisel">👤 Kişisel - Benim hikayem</option>
+                                        <option value="soru">❓ Soru - Tartışma başlat</option>
+                                        <option value="mizah">😂 Mizah - Espri yap</option>
+                                        <option value="fomo">🚨 FOMO - Aciliyet yarat</option>
+                                    </select>
+                                </div>
+
+                                <button id="btn-generate-trend" class="btn btn-primary btn-trend-generate">
+                                    <span class="btn-icon">🚀</span> Trend Tweet Üret
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Üretilen Trend Tweet Sonucu -->
+                        <div class="trend-result" id="trend-result" style="display:none;"></div>
+                    </div>
+                </div>
+
                 <!-- Tweet Çıktıları -->
                 <div class="output-section">
                     <div class="output-header">

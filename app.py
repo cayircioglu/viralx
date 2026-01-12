@@ -1233,5 +1233,262 @@ def get_thread_templates():
     return jsonify({'success': True, 'templates': templates})
 
 
+# ==========================================
+# TREND-JACKING SİSTEMİ
+# ==========================================
+
+from datetime import datetime
+from bs4 import BeautifulSoup
+
+# Manuel yedek trend listesi (API çalışmazsa)
+FALLBACK_TRENDS = [
+    {"name": "#YapayZeka", "category": "Teknoloji", "volume": 15000},
+    {"name": "#Dolar", "category": "Ekonomi", "volume": 45000},
+    {"name": "#Bitcoin", "category": "Kripto", "volume": 32000},
+    {"name": "#AsgariÜcret", "category": "Ekonomi", "volume": 67000},
+    {"name": "#Galatasaray", "category": "Spor", "volume": 120000},
+    {"name": "#Fenerbahçe", "category": "Spor", "volume": 95000},
+    {"name": "#Deprem", "category": "Gündem", "volume": 200000},
+    {"name": "#Enflasyon", "category": "Ekonomi", "volume": 38000},
+    {"name": "#ChatGPT", "category": "Teknoloji", "volume": 28000},
+    {"name": "#İstanbul", "category": "Şehir", "volume": 55000},
+    {"name": "#Türkiye", "category": "Gündem", "volume": 80000},
+    {"name": "#Altın", "category": "Ekonomi", "volume": 42000},
+    {"name": "#Elon", "category": "Teknoloji", "volume": 25000},
+    {"name": "#OpenAI", "category": "AI", "volume": 18000},
+    {"name": "#Startup", "category": "İş", "volume": 12000}
+]
+
+@app.route('/api/trends')
+def get_trends():
+    """Türkiye gündemindeki trendleri çek"""
+    trends = []
+
+    # Yöntem 1: Google Trends Türkiye
+    try:
+        from pytrends.request import TrendReq
+        pytrends = TrendReq(hl='tr-TR', tz=180, timeout=(10, 25))
+        trending = pytrends.trending_searches(pn='turkey')
+
+        for i, trend in enumerate(trending[0].tolist()[:10]):
+            trends.append({
+                "name": trend,
+                "category": "Google",
+                "volume": (10 - i) * 5000,
+                "source": "google"
+            })
+    except Exception as e:
+        print(f"Google trends error: {e}")
+
+    # Yöntem 2: Twitter Trends Scraping (alternatif kaynak)
+    try:
+        url = "https://trends24.in/turkey/"
+        response = requests.get(url, timeout=5, headers={
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        })
+        if response.status_code == 200:
+            soup = BeautifulSoup(response.text, 'html.parser')
+            for i, item in enumerate(soup.select('.trend-card__list li a')[:10]):
+                text = item.get_text(strip=True)
+                if text and len(text) > 1:
+                    trends.append({
+                        "name": text,
+                        "category": "Twitter",
+                        "volume": (10 - i) * 3000,
+                        "source": "twitter"
+                    })
+    except Exception as e:
+        print(f"Twitter trends error: {e}")
+
+    # Yöntem 3: Ekşi Sözlük Gündem
+    try:
+        eksi_url = "https://eksisozluk.com/basliklar/gundem"
+        response = requests.get(eksi_url, timeout=5, headers={
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        })
+        if response.status_code == 200:
+            soup = BeautifulSoup(response.text, 'html.parser')
+            for i, item in enumerate(soup.select('.topic-list a')[:8]):
+                text = item.get_text(strip=True)
+                if text and len(text) > 2:
+                    # Entry sayısını al
+                    small = item.select_one('small')
+                    count = 0
+                    if small:
+                        try:
+                            count = int(small.get_text(strip=True).replace('.', ''))
+                        except:
+                            count = (8 - i) * 100
+                    trends.append({
+                        "name": text,
+                        "category": "Ekşi",
+                        "volume": count or (8 - i) * 1500,
+                        "source": "eksi"
+                    })
+    except Exception as e:
+        print(f"Eksi trends error: {e}")
+
+    # Hiç trend bulunamadıysa yedek listeyi kullan
+    if len(trends) == 0:
+        trends = FALLBACK_TRENDS
+
+    # Benzersiz trendleri al
+    seen = set()
+    unique_trends = []
+    for t in trends:
+        name_lower = t['name'].lower().strip('#')
+        if name_lower not in seen and len(name_lower) > 1:
+            seen.add(name_lower)
+            unique_trends.append(t)
+
+    # Volume'a göre sırala
+    unique_trends.sort(key=lambda x: x.get('volume', 0), reverse=True)
+
+    return jsonify({
+        'success': True,
+        'trends': unique_trends[:20],
+        'last_update': datetime.now().strftime('%H:%M')
+    })
+
+
+@app.route('/api/generate-trend-tweet', methods=['POST'])
+def generate_trend_tweet():
+    """Trend-jacking tweet üret"""
+    data = request.json
+    trend = data.get('trend', '')
+    niche = data.get('niche', 'girişimcilik')
+    angle = data.get('angle', 'hot_take')
+
+    angle_instructions = {
+        'hot_take': 'Cesur, tartışmalı, kışkırtıcı bir yorum yap. Herkesin düşünüp de söyleyemediğini söyle.',
+        'analiz': 'Detaylı analiz yap. Neden önemli? Arka planda ne var? Kimse ne göremiyor?',
+        'tahmin': 'Bu olayın geleceği hakkında cesur bir tahmin yap.',
+        'ders': 'Bu olaydan çıkarılacak hayat/iş dersini anlat.',
+        'karsilastirma': 'Başka bir olayla veya dönemle karşılaştır.',
+        'kisisel': 'Kişisel bir hikaye veya deneyimle bağlantı kur.',
+        'soru': 'Düşündürücü, tartışma başlatacak bir soru sor.',
+        'mizah': 'Zekice, esprili bir yorum yap. Güldürürken düşündür.',
+        'fomo': 'Aciliyet yarat. Bu trendi kaçıranların kaybedeceğini hissettir.'
+    }
+
+    prompt = f"""
+    🔥 TREND-JACKING (GÜNDEM KORSANLIĞI) TWEETİ ÜRET
+
+    GÜNDEMDEKI KONU: {trend}
+    KULLANICININ NİŞİ: {niche}
+    İSTENEN AÇI: {angle_instructions.get(angle, angle_instructions['hot_take'])}
+
+    TREND-JACKING NEDİR?
+    Gündemdeki popüler bir konuyu kullanarak kendi nişine trafik çekmek.
+    Herkesin konuştuğu şeye "senin açından" yorum yaparak dikkat çekmek.
+
+    ALTIN KURALLAR:
+    1. İlk cümle MUTLAKA dikkat çekici olsun (hook)
+    2. Trendi kendi nişinle AKILLICA bağla (zoraki değil, doğal)
+    3. İnsanları düşündür veya güldür
+    4. Maksimum 280 karakter
+    5. Hashtag kullanma (organik görünsün)
+    6. Tartışma yaratacak bir şey söyle
+
+    ÖRNEK TREND-JACKING'LER:
+
+    Trend: #AsgariÜcret
+    Niş: Girişimcilik
+    Tweet: "Herkes asgari ücret zammını bekliyor. Ama kimse neden hala başkasının belirlediği rakama mahkum olduğunu sorgulamıyor. Asıl zam, kendi işini kurana gelir."
+
+    Trend: #YKS2026
+    Niş: Yapay Zeka
+    Tweet: "4 yıl üniversite oku, çık işsiz kal. Ya da 4 ay AI öğren, dünyaya çalış. YKS sınavı değişmedi ama dünya değişti. Tercih sizin."
+
+    Trend: #Dolar
+    Niş: Kripto
+    Tweet: "Dolar 35 olmuş diye panik yapanlar var. 2020'de 7 liraydı zaten. Asıl soru: Neden hala TL'de duruyorsun?"
+
+    ŞİMDİ SEN ÜRET:
+    Trend: {trend}
+    Niş: {niche}
+    Açı: {angle}
+
+    Sadece tweet metnini yaz, başka hiçbir şey ekleme.
+    """
+
+    try:
+        response = model.generate_content(prompt)
+        tweet_text = response.text.strip()
+
+        # Tırnak ve gereksiz karakterleri temizle
+        tweet_text = tweet_text.strip('"\'')
+        if tweet_text.startswith('Tweet:'):
+            tweet_text = tweet_text[6:].strip()
+
+        # Virallik puanı hesapla
+        virality_score = calculate_virality_score(tweet_text)
+
+        # Eleştiri üret
+        criticism = ""
+        try:
+            critic_prompt = f"Bu tweet için 1 cümlelik yapıcı eleştiri yaz: '{tweet_text}'"
+            critic_response = model.generate_content(critic_prompt)
+            criticism = critic_response.text.strip()[:150]
+        except:
+            pass
+
+        return jsonify({
+            'success': True,
+            'tweet': tweet_text,
+            'virality_score': virality_score,
+            'criticism': criticism,
+            'trend_used': trend,
+            'char_count': len(tweet_text)
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
+
+def calculate_virality_score(text):
+    """Tweet virallik puanını hesapla"""
+    score = 50  # Başlangıç puanı
+
+    # Hook kontrolü - ilk cümle güçlü mü?
+    first_sentence = text.split('.')[0] if '.' in text else text[:50]
+    hook_words = ['herkes', 'kimse', 'asıl', 'gerçek', 'sır', 'neden', 'nasıl', 'dikkat', 'acil', 'son']
+    if any(word in first_sentence.lower() for word in hook_words):
+        score += 10
+
+    # Soru içeriyor mu?
+    if '?' in text:
+        score += 8
+
+    # Sayı içeriyor mu?
+    if any(char.isdigit() for char in text):
+        score += 5
+
+    # Karakter uzunluğu optimal mi? (180-250 ideal)
+    char_count = len(text)
+    if 180 <= char_count <= 250:
+        score += 10
+    elif char_count < 100:
+        score -= 5
+    elif char_count > 280:
+        score -= 15
+
+    # Duygusal kelimeler
+    emotional_words = ['şok', 'inanamaz', 'müthiş', 'korkunç', 'harika', 'berbat', 'muhteşem', 'felaket']
+    if any(word in text.lower() for word in emotional_words):
+        score += 7
+
+    # Kışkırtıcı ifadeler
+    provocative = ['ama', 'fakat', 'oysa', 'aksine', 'tersine', 'aslında']
+    if any(word in text.lower() for word in provocative):
+        score += 5
+
+    # Emoji yok bonus (daha organik)
+    import emoji
+    if not any(char in emoji.EMOJI_DATA for char in text):
+        score += 3
+
+    return min(max(score, 10), 100)  # 10-100 arası
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5800, debug=True)

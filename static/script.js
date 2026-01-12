@@ -4533,6 +4533,305 @@ pasif gelir kaynakları,tutkulu,kişisel deneyim,finansal özgürlük arayanlar,
         showToast('CSV indirildi!');
     }
 
+    // ==========================================
+    // TREND-JACKING SİSTEMİ
+    // ==========================================
+
+    let selectedTrend = null;
+
+    // Trendleri çek
+    window.fetchTrends = async function() {
+        const container = document.getElementById('trends-list');
+        if (!container) return;
+
+        container.innerHTML = `
+            <div class="trends-loading">
+                <div class="spinner"></div>
+                Trendler yükleniyor...
+            </div>
+        `;
+
+        try {
+            const response = await fetch('/api/trends');
+            const data = await response.json();
+
+            if (data.success && data.trends && data.trends.length > 0) {
+                displayTrends(data.trends);
+                const updateTime = document.getElementById('trends-update-time');
+                if (updateTime) {
+                    updateTime.textContent = data.last_update || '--:--';
+                }
+            } else {
+                container.innerHTML = '<div class="trends-empty">❌ Trend bulunamadı</div>';
+            }
+        } catch (error) {
+            console.error('Trend fetch error:', error);
+            container.innerHTML = '<div class="trends-error">❌ Bağlantı hatası - Tekrar deneyin</div>';
+        }
+    };
+
+    // Trendleri listele
+    function displayTrends(trends) {
+        const container = document.getElementById('trends-list');
+        if (!container) return;
+
+        container.innerHTML = trends.map((trend, index) => `
+            <div class="trend-item" data-index="${index}" onclick="selectTrend(${index}, '${escapeHtmlAttr(trend.name)}', '${trend.category || 'Genel'}', ${trend.volume || 0})">
+                <span class="trend-rank">${index + 1}</span>
+                <div class="trend-info">
+                    <span class="trend-name">${escapeHtml(trend.name)}</span>
+                    <span class="trend-meta">
+                        <span class="trend-category">${trend.category || 'Genel'}</span>
+                        ${trend.volume ? `<span class="trend-volume">${formatVolume(trend.volume)}</span>` : ''}
+                    </span>
+                </div>
+                <span class="trend-source ${trend.source || ''}">${getSourceIcon(trend.source)}</span>
+            </div>
+        `).join('');
+    }
+
+    // Kaynak ikonu
+    function getSourceIcon(source) {
+        const icons = {
+            'google': '🔍',
+            'twitter': '🐦',
+            'eksi': '📝'
+        };
+        return icons[source] || '📊';
+    }
+
+    // HTML attribute escape
+    function escapeHtmlAttr(text) {
+        return String(text || '').replace(/'/g, "\\'").replace(/"/g, '\\"');
+    }
+
+    // Rakam formatla
+    function formatVolume(num) {
+        if (!num) return '';
+        if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+        if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+        return num.toString();
+    }
+
+    // Trend seç
+    window.selectTrend = function(index, name, category, volume) {
+        selectedTrend = { name, category, volume };
+
+        // Tüm itemlerden selected'ı kaldır
+        document.querySelectorAll('.trend-item').forEach(item => {
+            item.classList.remove('selected');
+        });
+
+        // Seçilene ekle
+        const selectedItem = document.querySelector(`.trend-item[data-index="${index}"]`);
+        if (selectedItem) {
+            selectedItem.classList.add('selected');
+        }
+
+        // Editor'ü göster
+        const editor = document.getElementById('trend-editor');
+        if (editor) {
+            editor.style.display = 'block';
+        }
+
+        const badge = document.getElementById('selected-trend-badge');
+        if (badge) {
+            badge.innerHTML = `
+                <span class="badge-icon">📍</span>
+                <span class="badge-text">${escapeHtml(name)}</span>
+                <span class="badge-category">${category}</span>
+                <button onclick="clearTrendSelection()" class="badge-close">✕</button>
+            `;
+        }
+
+        // Sonucu gizle
+        const result = document.getElementById('trend-result');
+        if (result) {
+            result.style.display = 'none';
+        }
+    };
+
+    // Trend seçimini temizle
+    window.clearTrendSelection = function() {
+        selectedTrend = null;
+        document.querySelectorAll('.trend-item').forEach(item => {
+            item.classList.remove('selected');
+        });
+
+        const editor = document.getElementById('trend-editor');
+        if (editor) editor.style.display = 'none';
+
+        const result = document.getElementById('trend-result');
+        if (result) result.style.display = 'none';
+    };
+
+    // Trend tweet üret
+    window.generateTrendTweet = async function() {
+        if (!selectedTrend) {
+            showToast('❌ Önce bir trend seçin!', 'error');
+            return;
+        }
+
+        const nicheInput = document.getElementById('trend-niche');
+        const angleSelect = document.getElementById('trend-angle');
+
+        const niche = nicheInput?.value?.trim() || 'girişimcilik';
+        const angle = angleSelect?.value || 'hot_take';
+
+        if (!niche) {
+            showToast('❌ Lütfen kendi nişinizi girin!', 'error');
+            nicheInput?.focus();
+            return;
+        }
+
+        const btn = document.getElementById('btn-generate-trend');
+        if (!btn) return;
+
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<div class="spinner-small"></div> Üretiliyor...';
+
+        try {
+            const response = await fetch('/api/generate-trend-tweet', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    trend: selectedTrend.name,
+                    niche: niche,
+                    angle: angle
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                displayTrendResult(data);
+                showToast('✅ Trend tweet üretildi!');
+            } else {
+                showToast('❌ ' + (data.error || 'Tweet üretilemedi'), 'error');
+            }
+        } catch (error) {
+            console.error('Generate trend tweet error:', error);
+            showToast('❌ Bağlantı hatası!', 'error');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        }
+    };
+
+    // Trend tweet sonucunu göster
+    function displayTrendResult(data) {
+        const container = document.getElementById('trend-result');
+        if (!container) return;
+
+        container.style.display = 'block';
+
+        const scoreClass = data.virality_score >= 70 ? 'high' : data.virality_score >= 50 ? 'medium' : 'low';
+        const charClass = data.char_count > 280 ? 'over' : data.char_count > 250 ? 'warning' : 'ok';
+
+        container.innerHTML = `
+            <div class="trend-tweet-card">
+                <div class="tweet-header">
+                    <span class="tweet-trend-badge">🔥 ${escapeHtml(data.trend_used)}</span>
+                    <span class="tweet-char-count ${charClass}">${data.char_count}/280</span>
+                </div>
+
+                <div class="tweet-content" id="trend-tweet-text">${escapeHtml(data.tweet)}</div>
+
+                <div class="tweet-scores">
+                    <div class="score-item ${scoreClass}">
+                        <span class="score-label">🔥 Virallik</span>
+                        <span class="score-value">${data.virality_score}</span>
+                    </div>
+                </div>
+
+                ${data.criticism ? `
+                    <div class="tweet-criticism">
+                        <span class="criticism-label">💬 AI Eleştirisi:</span>
+                        <span class="criticism-text">${escapeHtml(data.criticism)}</span>
+                    </div>
+                ` : ''}
+
+                <div class="tweet-actions">
+                    <button onclick="copyTrendTweet()" class="btn-action">📋 Kopyala</button>
+                    <button onclick="generateTrendTweet()" class="btn-action">🔄 Yeniden</button>
+                    <button onclick="saveTrendTweetToDraft()" class="btn-action">💾 Taslağa Kaydet</button>
+                </div>
+            </div>
+        `;
+
+        // Sonuca scroll
+        container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // Trend tweetini kopyala
+    window.copyTrendTweet = function() {
+        const text = document.getElementById('trend-tweet-text')?.textContent;
+        if (text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('✅ Tweet kopyalandı!');
+            }).catch(() => {
+                showToast('❌ Kopyalama başarısız', 'error');
+            });
+        }
+    };
+
+    // Trend tweetini taslağa kaydet
+    window.saveTrendTweetToDraft = function() {
+        const text = document.getElementById('trend-tweet-text')?.textContent;
+        if (text) {
+            // Mevcut taslak kaydetme mantığını kullan
+            let drafts = JSON.parse(localStorage.getItem(STORAGE_KEYS.DRAFTS) || '[]');
+
+            const newDraft = {
+                id: Date.now(),
+                text: text,
+                date: new Date().toISOString(),
+                viralScore: 0,
+                qualityScore: 0,
+                source: 'trend-jacking'
+            };
+
+            drafts.unshift(newDraft);
+
+            // Maksimum 50 taslak tut
+            if (drafts.length > 50) {
+                drafts = drafts.slice(0, 50);
+            }
+
+            localStorage.setItem(STORAGE_KEYS.DRAFTS, JSON.stringify(drafts));
+            showToast('💾 Taslağa kaydedildi!');
+        }
+    };
+
+    // Trend-jacking event listeners
+    function initTrendJacking() {
+        // Generate butonu
+        const generateBtn = document.getElementById('btn-generate-trend');
+        if (generateBtn) {
+            generateBtn.addEventListener('click', generateTrendTweet);
+        }
+
+        // Trendleri yükle
+        fetchTrends();
+
+        // Her 5 dakikada güncelle
+        setInterval(fetchTrends, 5 * 60 * 1000);
+    }
+
+    // Init'e ekle
+    const originalInit = init;
+    init = function() {
+        if (typeof originalInit === 'function') {
+            // Original init zaten çağrılıyor
+        }
+        // Trend-jacking'i başlat
+        setTimeout(initTrendJacking, 500);
+    };
+
+    // Sayfa yüklendikten sonra trend-jacking'i başlat
+    setTimeout(initTrendJacking, 1000);
+
     // Initialize App
     init();
 });
